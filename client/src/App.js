@@ -6,12 +6,19 @@ import Card from "./components/Card";
 import MarkerPin from "./components/MarkerPin";
 import NewPinForm from "./components/NewPinForm";
 import PopupCard from "./components/PopupCard";
+import "./app.css";
+import Register from "./components/Register";
+import Login from "./components/Login";
 
 function App() {
-  const currentUser = "saitama"; // TODO: remove
+  const myStorage = window.localStorage;
+
+  const [currentUser, setCurrentUser] = useState(myStorage.getItem("user"));
   const [pins, setPins] = useState([]);
   const [currentPinId, setCurrentPinId] = useState(null);
   const [newPin, setNewPin] = useState(null);
+  const [showRegister, setShowRegister] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
   const [viewport, setViewport] = useState({
     width: "100vw",
     height: "100vh",
@@ -41,6 +48,10 @@ function App() {
       lat,
       long,
     });
+  }
+
+  function handleOnLogout() {
+    myStorage.removeItem("user");
   }
 
   return (
@@ -77,18 +88,52 @@ function App() {
 
             {newPin && (
               <PopupCard pin={newPin} setStateValue={setNewPin}>
-                  <NewPinForm
-                    username={currentUser}
-                    lat={newPin.lat}
-                    long={newPin.long}
-                    pins={pins}
-                    setPins={setPins}
-                    setNewPin={setNewPin}
-                  />
+                <NewPinForm
+                  username={currentUser}
+                  lat={newPin.lat}
+                  long={newPin.long}
+                  pins={pins}
+                  setPins={setPins}
+                  setNewPin={setNewPin}
+                />
               </PopupCard>
             )}
           </div>
         ))}
+
+        {currentUser ? (
+          <button className="button logout" onClick={handleOnLogout}>
+            Logout
+          </button>
+        ) : (
+          <div className="buttons">
+            <button
+              className="button register"
+              onClick={() => setShowRegister(true)}
+            >
+              Register
+            </button>
+            <button className="button login" onClick={() => setShowLogin(true)}>
+              Login
+            </button>
+          </div>
+        )}
+
+        {showRegister && (
+          <Register
+            setShowRegister={setShowRegister}
+            myStorage={myStorage}
+            setCurrentUser={setCurrentUser}
+          />
+        )}
+
+        {showLogin && (
+          <Login
+            setShowLogin={setShowLogin}
+            myStorage={myStorage}
+            setCurrentUser={setCurrentUser}
+          />
+        )}
       </ReactMapGL>
     </div>
   );
