@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import ReactMapGL, { Marker, Popup } from "react-map-gl";
+import ReactMapGL from "react-map-gl";
 import axios from "axios";
-import { Room } from "@material-ui/icons";
 
 import Card from "./components/Card";
+import MarkerPin from "./components/MarkerPin";
 import NewPinForm from "./components/NewPinForm";
+import PopupCard from "./components/PopupCard";
 
 function App() {
   const currentUser = "saitama"; // TODO: remove
@@ -33,11 +34,6 @@ function App() {
     fetchPins();
   }, []);
 
-  function handleOnPinClick(id, lat, long) {
-    setCurrentPinId(id);
-    setViewport({ ...viewport, latitude: lat, longitude: long });
-  }
-
   function handleAddNewPin(e) {
     const [long, lat] = e.lngLat;
 
@@ -59,56 +55,28 @@ function App() {
       >
         {pins.map((pin) => (
           <div key={pin._id}>
-            <Marker
-              latitude={pin.lat}
-              longitude={pin.long}
-              offsetLeft={-viewport.zoom * 3.5}
-              offsetTop={-viewport.zoom * 7}
-            >
-              <span>
-                <Room
-                  style={{
-                    fontSize: viewport.zoom * 7,
-                    color:
-                      currentUser === pin.username ? "tomato" : "slateblue",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleOnPinClick(pin._id, pin.lat, pin.long)}
-                />
-              </span>
-            </Marker>
+            <MarkerPin
+              pin={pin}
+              viewport={viewport}
+              currentUser={currentUser}
+              setCurrentPinId={setCurrentPinId}
+              setViewport={setViewport}
+            />
 
             {currentPinId === pin._id && (
-              <Popup
-                latitude={pin.lat}
-                longitude={pin.long}
-                closeButton={true}
-                closeOnClick={false}
-                onClose={() => setCurrentPinId(null)}
-                anchor="left"
-              >
-                <div>
-                  <Card
-                    place={pin.title}
-                    review={pin.desc}
-                    rating={4}
-                    username={pin.username}
-                    time={pin.createdAt}
-                  />
-                </div>
-              </Popup>
+              <PopupCard pin={pin} setStateValue={setCurrentPinId}>
+                <Card
+                  place={pin.title}
+                  review={pin.desc}
+                  rating={4}
+                  username={pin.username}
+                  time={pin.createdAt}
+                />
+              </PopupCard>
             )}
 
             {newPin && (
-              <Popup
-                latitude={newPin.lat}
-                longitude={newPin.long}
-                closeButton={true}
-                closeOnClick={false}
-                onClose={() => setNewPin(null)}
-                anchor="left"
-              >
-                <div>
+              <PopupCard pin={newPin} setStateValue={setNewPin}>
                   <NewPinForm
                     username={currentUser}
                     lat={newPin.lat}
@@ -117,8 +85,7 @@ function App() {
                     setPins={setPins}
                     setNewPin={setNewPin}
                   />
-                </div>
-              </Popup>
+              </PopupCard>
             )}
           </div>
         ))}
