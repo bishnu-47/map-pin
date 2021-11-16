@@ -1,0 +1,31 @@
+.card{
+    height: 250px;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+label{
+    width: max-content;
+    color: tomato;
+    margin-bottom: 3px;
+    border-bottom: .5px solid tomato;
+}
+
+.review{
+    font-size: 14px;
+}
+
+.stars{
+    color: gold;
+}
+
+.info{
+    font-size: 14px;
+}
+
+.time{
+    font-size: 13px;
+    color: darkgrey;
+}

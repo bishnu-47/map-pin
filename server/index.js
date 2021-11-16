@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
+import cors from "cors";
 
 import pinRoute from "./routes/pins.js";
 import userRoute from "./routes/users.js";
@@ -10,6 +11,7 @@ connectDb();
 const app = express();
 
 // middlewares
+app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {

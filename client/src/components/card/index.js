@@ -1,4 +1,6 @@
 import { Star } from "@material-ui/icons";
+import {format} from "timeago.js"
+import "./card.css";
 
 const Card = ({ place, rating, review, time, username }) => {
   return (
@@ -6,7 +8,7 @@ const Card = ({ place, rating, review, time, username }) => {
       <label>Place</label>
       <h4>{place}</h4>
       <label>Review</label>
-      <p>{review}</p>
+      <p className="review">{review}</p>
       <label>Rating</label>
       <div className="stars">
         <Star />
@@ -16,10 +18,11 @@ const Card = ({ place, rating, review, time, username }) => {
       </div>
 
       <div className="info">
-        <p>
-          Information created by <b>{username}</b>
+        <label>Information</label>
+        <p className="info">
+          created by <b>{username}</b>
         </p>
-        <p>{time} ago</p>
+        <p className="time">{format(time)}</p>
       </div>
     </div>
   );
