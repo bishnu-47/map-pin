@@ -13,6 +13,7 @@ import Login from "./components/Login";
 function App() {
   const myStorage = window.localStorage;
 
+  const [info, setInfo] = useState("Double Click on map to mark a Pin.");
   const [currentUser, setCurrentUser] = useState(myStorage.getItem("user"));
   const [pins, setPins] = useState([]);
   const [currentPinId, setCurrentPinId] = useState(null);
@@ -43,6 +44,13 @@ function App() {
 
   function handleAddNewPin(e) {
     const [long, lat] = e.lngLat;
+    if (!currentUser) {
+      setInfo("You must be logged In to mark a pin.");
+      setTimeout(() => {
+        setInfo("Double Click on map to mark a Pin.");
+      }, 5000);
+      return;
+    }
 
     setNewPin({
       lat,
@@ -52,6 +60,7 @@ function App() {
 
   function handleOnLogout() {
     myStorage.removeItem("user");
+    setCurrentUser(null);
   }
 
   return (
@@ -134,6 +143,8 @@ function App() {
             setCurrentUser={setCurrentUser}
           />
         )}
+
+        <span className="info">{info}</span>
       </ReactMapGL>
     </div>
   );

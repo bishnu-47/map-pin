@@ -29,7 +29,7 @@ const Login = ({ setShowLogin, myStorage, setCurrentUser }) => {
         return;
       }
 
-      setMsg({ type: "success", text: "Login Successfull." });
+      setMsg({ type: "success", text: "Login Successful." });
       myStorage.setItem("user", res.data.username);
       setCurrentUser(res.data.username);
       setTimeout(() => {
